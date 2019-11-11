@@ -21,7 +21,7 @@ ap.add_argument("-d", "--detector", required=True,
 	help="path to OpenCV's deep learning face detector")
 ap.add_argument("-m", "--embedding-model", required=True,
 	help="path to OpenCV's deep learning face embedding model")
-ap.add_argument("-c", "--confidence", type=float, default=0.5,
+ap.add_argument("-c", "--confidence", type=float, default=0.2,
 	help="minimum probability to filter weak detections")
 args = vars(ap.parse_args())
 

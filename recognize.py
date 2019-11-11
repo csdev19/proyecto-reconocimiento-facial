@@ -94,6 +94,8 @@ for i in range(0, detections.shape[2]):
 		proba = preds[j]
 		name = le.classes_[j]
 
+		if name == 'yoda':
+			print(' es yoda atrapenlo!!!')
 		# draw the bounding box of the face along with the associated
 		# probability
 		text = "{}: {:.2f}%".format(name, proba * 100)
