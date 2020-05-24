@@ -123,9 +123,9 @@ while True:
 					(224, 0, 0), 2)
 				cv2.putText(frame, text, (startX, y),
 				cv2.FONT_HERSHEY_SIMPLEX, 0.45, (0, 0, 255), 2)
-				finded = True
+				# finded = True
 				print('apagate')
-				break
+				# break
 			else:
 				cv2.rectangle(frame, (startX, startY), (endX, endY),
 					(0, 0, 255), 2)
