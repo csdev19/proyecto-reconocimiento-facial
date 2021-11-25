@@ -14,6 +14,8 @@ import pickle
 import time
 import cv2
 import os
+import requests
+import json 
 
 # construct the argument parser and parse the arguments
 ap = argparse.ArgumentParser()
@@ -54,6 +56,29 @@ fps = FPS().start()
 
 contador = 0
 finded = False
+
+
+# variable to handle the login
+isLogged = False
+probability = 0.0
+user=""
+
+
+def handleLoggin(username):
+	print("""
+	FUISTE LOGEADO CON EXITO
+	
+	HOLA CRISTIAN FABRIZIO SOTOMAYOR GONZALES
+
+	CODIGO 20162019
+
+
+	""")
+	print('username', username)
+	res = requests.get('http://127.0.0.1:5000/')
+	response = json.loads(res.text)
+	print('response', response)
+
 
 iterar = True
 # loop over frames from the video file stream
@@ -115,23 +140,41 @@ while True:
 
 			# draw the bounding box of the face along with the
 			# associated probability
-			text = "{}: {:.2f}%".format(name, proba * 100)
+			if isLogged == False:
+				text = "{}: {:.2f}%".format(name, proba * 100)
+			else:
+				text = "{}: {:.2f}% -- LOGGED".format(user, probability)
+
 			y = startY - 10 if startY - 10 > 10 else startY + 10
-			if(name == 'cristian' and proba > 0.5):
-				print('hola', contador)
-				cv2.rectangle(frame, (startX, startY), (endX, endY),
-					(224, 0, 0), 2)
-				cv2.putText(frame, text, (startX, y),
-				cv2.FONT_HERSHEY_SIMPLEX, 0.45, (0, 0, 255), 2)
-				# finded = True
-				print('apagate')
-				# break
+
+			if isLogged == False:
+				if(name == 'cristian' and proba > 0.5):
+					print('hola', contador)
+					cv2.rectangle(frame, (startX, startY), (endX, endY),
+						(224, 0, 0), 2)
+					cv2.putText(frame, text, (startX, y),
+					cv2.FONT_HERSHEY_SIMPLEX, 0.45, (0, 0, 255), 2)
+					# finded = True
+					print('apagate')
+					# break
+					
+					if(isLogged is not True):
+						isLogged = True
+						probability = proba * 100
+						user = name
+						handleLoggin(name)
+
+				else:
+					cv2.rectangle(frame, (startX, startY), (endX, endY),
+						(0, 0, 255), 2)
+					cv2.putText(frame, text, (startX, y),
+						cv2.FONT_HERSHEY_SIMPLEX, 0.45, (0, 0, 255), 2)
+				
 			else:
 				cv2.rectangle(frame, (startX, startY), (endX, endY),
-					(0, 0, 255), 2)
+						(0, 255, 0), 2)
 				cv2.putText(frame, text, (startX, y),
-					cv2.FONT_HERSHEY_SIMPLEX, 0.45, (0, 0, 255), 2)
-				
+						cv2.FONT_HERSHEY_SIMPLEX, 0.45, (0, 255, 0), 2)
 
 	if finded:
 		break
@@ -147,17 +190,6 @@ while True:
 	if key == ord("q"):
 		break
 
-
-if(finded):
-	print("""
-	FUISTE LOGEADO CON EXITO
-	
-	HOLA CRISTIAN FABRIZIO SOTOMAYOR GONZALES
-
-	CODIGO 20162019
-
-
-	""")
 
 # stop the timer and display FPS information
 fps.stop()
